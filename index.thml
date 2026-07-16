@@ -316,7 +316,8 @@
 
 <script>
     // Firebase Realtime Database manzilingizni shu yerga qo'ying (oxirida / qolsin)
-    const DATABASE_URL = "https://console.firebase.google.com/project/gildirak-63c96/database/gildirak-63c96-default-rtdb/data/~2F?fb_gclid=Cj0KCQjwguLSBhDLARIsAH-yPrFOBqkVMEn5pDBzx8Y111pOIZmWeVSr49mxfBY9t-wcHMXuxfuRIxYaAreEEALw_wcB&fb_utm_campaign=Cloud-SS-DR-Firebase-FY26-global-gsem-1713590&fb_utm_content=text-ad&fb_utm_medium=cpc&fb_utm_source=google&fb_utm_term=KW_https%20console%20firebase%20google%20com";
+    const DATABASE_URL = "https://gildirak-63c96-default-rtdb.firebaseio.com/
+";
 
     // ----------------------------------------------------
     // REJIMLARNI ANIQLASH SCRIPT-i (URL orqali boshqarish)
