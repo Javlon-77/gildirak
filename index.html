@@ -1,3 +1,326 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ro'yxatdan O'tish 🎡</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #090d16;
+            --card-bg: #111827;
+            --accent-color: #f59e0b;
+            --text-color: #f3f4f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- FOYDALANUVChI REJIMIDAGI DIZAYN --- */
+        #userView {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .register-card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(16, 185, 129, 0.2);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .register-card h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .register-card p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            background-color: #090d16;
+            border: 2px solid #374151;
+            border-radius: 12px;
+            padding: 14px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #10b981;
+        }
+
+        input:disabled {
+            background-color: #1f2937;
+            color: #9ca3af;
+            cursor: not-allowed;
+            border-color: #4b5563;
+        }
+
+        .reg-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .reg-btn:active {
+            transform: scale(0.98);
+        }
+
+        .status {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            min-height: 22px;
+        }
+
+        /* --- ADMIN REJIMIDAGI DIZAYN --- */
+        #adminView {
+            display: none;
+            width: 100%;
+            max-width: 1050px;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            gap: 40px;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(245, 158, 11, 0.1);
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @media (max-width: 950px) {
+            .main-container { flex-direction: column; text-align: center; }
+        }
+
+        .wheel-section {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1.1;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 35px solid #ef4444;
+            z-index: 10;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+
+        canvas {
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.3), 0 0 0 10px #1f2937;
+            transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
+        }
+
+        .center-circle {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffffff 0%, #d1d5db 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-weight: bold;
+            color: #090d16;
+            font-size: 0.9rem;
+            user-select: none;
+            z-index: 5;
+            border: 3px solid #1f2937;
+        }
+
+        .control-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(45deg, #f59e0b, #ef4444, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .active-count {
+            font-size: 1.1rem;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .spin-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #090d16;
+            border: none;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .spin-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .spin-btn:disabled {
+            background: #374151;
+            color: #6b7280;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .reset-btn {
+            background-color: #374151;
+            color: #f3f4f6;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .reset-btn:hover { background-color: #ef4444; }
+
+        .podium-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 15px 10px;
+            min-height: 150px;
+        }
+
+        .podium-place { display: flex; flex-direction: column; align-items: center; width: 30%; }
+        .podium-name { font-size: 0.85rem; font-weight: bold; text-align: center; margin-bottom: 8px; min-height: 20px; color: #9ca3af; word-break: break-all; }
+        .podium-block { width: 100%; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; font-weight: bold; border-radius: 8px 8px 0 0; color: #090d16; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+        .place-2 .podium-block { height: 45px; background: linear-gradient(to top, #94a3b8, #cbd5e1); }
+        .place-1 .podium-block { height: 75px; background: linear-gradient(to top, #d97706, #fcd34d); }
+        .place-3 .podium-block { height: 30px; background: linear-gradient(to top, #b45309, #f97316); }
+
+        .current-status { text-align: center; font-weight: bold; color: #60a5fa; font-size: 1.1rem; min-height: 27px; }
+    </style>
+</head>
+<body>
+
+<!-- ============================================== -->
+<!-- 1. FOYDALANUVCHILAR REJIMI (RO'YXAT)           -->
+<!-- ============================================== -->
+<div id="userView">
+    <div class="register-card">
+        <h1>Omad G'ildiragi</h1>
+        <p>Ismingizni kiriting va o'yinga qo'shiling!</p>
+        
+        <input type="text" id="userName" placeholder="Ismingizni yozing..." required>
+        <button class="reg-btn" onclick="registerName()">Ro'yxatdan o'tish 🚀</button>
+        
+        <div class="status" id="statusMessage"></div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 2. ADMIN REJIMI (G'ILDIRAK VA SHOHSUPA)         -->
+<!-- ============================================== -->
+<div id="adminView">
+    <div class="main-container">
+        <div class="wheel-section">
+            <div class="pointer"></div>
+            <canvas id="wheelCanvas" width="400" height="400"></canvas>
+            <div class="center-circle" onclick="startTournament()">GO!</div>
+        </div>
+
+        <div class="control-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Omad Shou G'ildiragi</h1>
+                    <div class="active-count" id="countDisplay">Ishtirokchilar: 0 ta</div>
+                </div>
+                <button class="reset-btn" onclick="clearDatabase()">Ro'yxatni Tozalash</button>
+            </div>
+
+            <button class="spin-btn" id="spinBtn" onclick="startTournament()">Start! 🏆</button>
+            <div class="current-status" id="statusBox">Ishtirokchilar ro'yxatdan o'tishini kutyapmiz...</div>
+
+            <div class="podium-container">
+                <div class="podium-place place-2">
+                    <div class="podium-name" id="name-2">-</div>
+                    <div class="podium-block">2</div>
+                </div>
+                <div class="podium-place place-1">
+                    <div class="podium-name" id="name-1">-</div>
+                    <div class="podium-block">1</div>
+                </div>
+                <div class="podium-place place-3">
+                    <div class="podium-name" id="name-3">-</div>
+                    <div class="podium-block">3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Firebase Realtime Database manzili
     const DATABASE_URL = "https://gildirak-63c96-default-rtdb.firebaseio.com/";
@@ -36,7 +359,7 @@
                     localStorage.removeItem('hasRegisteredWheel');
                     localStorage.removeItem('wheel_reset_token');
                     
-                    // Bloklangan elementlarni tiklash
+                    // Elementlarni blokdan ochish
                     nameInput.disabled = false;
                     regBtn.disabled = false;
                     regBtn.style.opacity = "1";
@@ -160,7 +483,7 @@
                 // Ismlarni o'chirish
                 await fetch(`${DATABASE_URL}participants.json`, { method: 'DELETE' });
                 
-                // Yangi reset token yaratish (bu foydalanuvchilar ekranini tozalaydi)
+                // Yangi reset token yaratish (bu foydalanuvchilar ekranini qulfdan ochadi)
                 const newToken = "reset_" + Date.now();
                 await fetch(`${DATABASE_URL}resetToken.json`, {
                     method: 'PUT',
@@ -369,3 +692,6 @@
         window.fetchParticipants();
     }
 </script>
+
+</body>
+</html>
