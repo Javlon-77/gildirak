@@ -2,8 +2,8 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ro'yxatdan O'tish 🎡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
+    <title>Omad G'ildiragi 🎡</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -17,7 +17,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -27,51 +28,49 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 12px;
         }
 
         /* --- FOYDALANUVChI REJIMIDAGI DIZAYN --- */
         #userView {
             display: none;
             width: 100%;
-            max-width: 400px;
+            max-width: 360px;
         }
 
         .register-card {
             background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(16, 185, 129, 0.2);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .register-card h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #10b981, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            color: #10b981;
         }
 
         .register-card p {
             color: #9ca3af;
-            font-size: 0.9rem;
-            margin-bottom: 25px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
         }
 
         input {
             width: 100%;
             background-color: #090d16;
             border: 2px solid #374151;
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 6px;
+            padding: 12px;
             color: white;
             font-size: 1rem;
             outline: none;
             box-sizing: border-box;
-            transition: border-color 0.3s;
-            margin-bottom: 20px;
+            transition: border-color 0.2s;
+            margin-bottom: 16px;
             text-align: center;
         }
 
@@ -88,49 +87,55 @@
 
         .reg-btn {
             width: 100%;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: #10b981;
             color: white;
             border: none;
-            padding: 14px;
-            font-size: 1.1rem;
+            padding: 12px;
+            font-size: 1rem;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
+            transition: opacity 0.2s;
         }
 
-        .reg-btn:active {
-            transform: scale(0.98);
+        .reg-btn:disabled {
+            background: #374151;
+            color: #6b7280;
+            cursor: not-allowed;
         }
 
         .status {
-            margin-top: 15px;
-            font-size: 0.95rem;
+            margin-top: 12px;
+            font-size: 0.9rem;
             font-weight: 500;
-            min-height: 22px;
+            min-height: 20px;
         }
 
         /* --- ADMIN REJIMIDAGI DIZAYN --- */
         #adminView {
             display: none;
             width: 100%;
-            max-width: 1050px;
+            max-width: 900px;
         }
 
         .main-container {
             display: flex;
-            flex-direction: row;
-            gap: 40px;
+            flex-direction: column;
+            gap: 20px;
             background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(245, 158, 11, 0.1);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
             align-items: center;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        @media (max-width: 950px) {
-            .main-container { flex-direction: column; text-align: center; }
+        @media (min-width: 768px) {
+            .main-container {
+                flex-direction: row;
+                padding: 30px;
+                gap: 35px;
+            }
         }
 
         .wheel-section {
@@ -138,105 +143,104 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex: 1.1;
+            width: 100%;
+            max-width: 340px;
+        }
+
+        @media (min-width: 768px) {
+            .wheel-section {
+                max-width: 380px;
+            }
         }
 
         .pointer {
             position: absolute;
-            top: -20px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 18px solid transparent;
-            border-right: 18px solid transparent;
-            border-top: 35px solid #ef4444;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 26px solid #ef4444;
             z-index: 10;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
         }
 
         canvas {
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.3), 0 0 0 10px #1f2937;
+            width: 100% !important;
+            height: auto !important;
+            aspect-ratio: 1 / 1;
+            box-shadow: 0 0 0 6px #1f2937;
             transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
 
         .center-circle {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle, #ffffff 0%, #d1d5db 100%);
+            width: 50px;
+            height: 50px;
+            background: #ffffff;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             font-weight: bold;
             color: #090d16;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             user-select: none;
             z-index: 5;
             border: 3px solid #1f2937;
         }
 
         .control-section {
-            flex: 1.2;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             width: 100%;
+            flex: 1;
         }
 
         h1 {
-            font-size: 2rem;
-            background: linear-gradient(45deg, #f59e0b, #ef4444, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
+            font-size: 1.5rem;
+            color: #f59e0b;
+            font-weight: 700;
         }
 
         .active-count {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #10b981;
             font-weight: 600;
+            margin-top: 2px;
         }
 
         .spin-btn {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: #f59e0b;
             color: #090d16;
             border: none;
-            padding: 14px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            border-radius: 14px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 6px;
             cursor: pointer;
             text-transform: uppercase;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
-        }
-
-        .spin-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.5);
+            transition: background 0.2s;
         }
 
         .spin-btn:disabled {
             background: #374151;
             color: #6b7280;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
         .reset-btn {
             background-color: #374151;
             color: #f3f4f6;
             border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.85rem;
-            transition: background 0.2s;
+            font-size: 0.8rem;
         }
 
         .reset-btn:hover { background-color: #ef4444; }
@@ -247,42 +251,36 @@
             align-items: flex-end;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 15px 10px;
-            min-height: 150px;
+            border-radius: 8px;
+            padding: 12px 6px;
+            min-height: 120px;
         }
 
         .podium-place { display: flex; flex-direction: column; align-items: center; width: 30%; }
-        .podium-name { font-size: 0.85rem; font-weight: bold; text-align: center; margin-bottom: 8px; min-height: 20px; color: #9ca3af; word-break: break-all; }
-        .podium-block { width: 100%; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; font-weight: bold; border-radius: 8px 8px 0 0; color: #090d16; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .podium-name { font-size: 0.8rem; font-weight: bold; text-align: center; margin-bottom: 6px; min-height: 18px; color: #9ca3af; word-break: break-all; }
+        .podium-block { width: 100%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; font-weight: bold; border-radius: 4px 4px 0 0; color: #090d16; }
 
-        .place-2 .podium-block { height: 45px; background: linear-gradient(to top, #94a3b8, #cbd5e1); }
-        .place-1 .podium-block { height: 75px; background: linear-gradient(to top, #d97706, #fcd34d); }
-        .place-3 .podium-block { height: 30px; background: linear-gradient(to top, #b45309, #f97316); }
+        .place-2 .podium-block { height: 40px; background: #cbd5e1; }
+        .place-1 .podium-block { height: 65px; background: #fcd34d; }
+        .place-3 .podium-block { height: 25px; background: #f97316; }
 
-        .current-status { text-align: center; font-weight: bold; color: #60a5fa; font-size: 1.1rem; min-height: 27px; }
+        .current-status { text-align: center; font-weight: bold; color: #60a5fa; font-size: 1rem; min-height: 24px; }
     </style>
 </head>
 <body>
 
-<!-- ============================================== -->
-<!-- 1. FOYDALANUVCHILAR REJIMI (RO'YXAT)           -->
-<!-- ============================================== -->
+<!-- FOYDALANUVCHILAR REJIMI -->
 <div id="userView">
     <div class="register-card">
         <h1>Omad G'ildiragi</h1>
-        <p>Ismingizni kiriting va o'yinga qo'shiling!</p>
-        
-        <input type="text" id="userName" placeholder="Ismingizni yozing..." required>
-        <button class="reg-btn" onclick="registerName()">Ro'yxatdan o'tish 🚀</button>
-        
+        <p>Ismingizni kiriting va ro'yxatdan o'ting!</p>
+        <input type="text" id="userName" placeholder="Ismingiz..." required>
+        <button class="reg-btn" onclick="registerName()">Qo'shilish 🚀</button>
         <div class="status" id="statusMessage"></div>
     </div>
 </div>
 
-<!-- ============================================== -->
-<!-- 2. ADMIN REJIMI (G'ILDIRAK VA SHOHSUPA)         -->
-<!-- ============================================== -->
+<!-- ADMIN REJIMI -->
 <div id="adminView">
     <div class="main-container">
         <div class="wheel-section">
@@ -292,16 +290,16 @@
         </div>
 
         <div class="control-section">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
-                    <h1>Omad Shou G'ildiragi</h1>
+                    <h1>Omad G'ildiragi</h1>
                     <div class="active-count" id="countDisplay">Ishtirokchilar: 0 ta</div>
                 </div>
-                <button class="reset-btn" onclick="clearDatabase()">Ro'yxatni Tozalash</button>
+                <button class="reset-btn" onclick="clearDatabase()">Tozalash</button>
             </div>
 
-            <button class="spin-btn" id="spinBtn" onclick="startTournament()">Start! 🏆</button>
-            <div class="current-status" id="statusBox">Ishtirokchilar ro'yxatdan o'tishini kutyapmiz...</div>
+            <button class="spin-btn" id="spinBtn" onclick="startTournament()">G'ildirakni aylantirish 🏆</button>
+            <div class="current-status" id="statusBox">Ismlar kutilmoqda...</div>
 
             <div class="podium-container">
                 <div class="podium-place place-2">
@@ -322,12 +320,7 @@
 </div>
 
 <script>
-    // Firebase Realtime Database manzili
     const DATABASE_URL = "https://gildirak-63c96-default-rtdb.firebaseio.com/";
-
-    // ----------------------------------------------------
-    // REJIMLARNI ANIQLASH SCRIPT-i (URL orqali boshqarish)
-    // ----------------------------------------------------
     const urlParams = new URLSearchParams(window.location.search);
     const mode = urlParams.get('mode');
 
@@ -339,55 +332,38 @@
         initUserLogic();
     }
 
-    // ----------------------------------------------------
-    // FOYDALANUVCHILAR LOGIKASI (Ism qo'shish va Cheklov)
-    // ----------------------------------------------------
+    // FOYDALANUVCHI CHEKLOVI VA SINXRONIZATSIYASI
     function initUserLogic() {
         const statusDiv = document.getElementById('statusMessage');
         const nameInput = document.getElementById('userName');
         const regBtn = document.querySelector('.reg-btn');
 
-        // Admin bazani tozalaganini aniqlash uchun reset tokenini kuzatish
         setInterval(async () => {
             try {
                 const response = await fetch(`${DATABASE_URL}resetToken.json`);
                 const serverToken = await response.json();
                 const localToken = localStorage.getItem('wheel_reset_token');
 
-                // Agar admin bazani tozalagan bo'lsa va yangi o'yin boshlangan bo'lsa
                 if (serverToken && serverToken !== localToken) {
                     localStorage.removeItem('hasRegisteredWheel');
                     localStorage.removeItem('wheel_reset_token');
-                    
-                    // Elementlarni blokdan ochish
                     nameInput.disabled = false;
                     regBtn.disabled = false;
-                    regBtn.style.opacity = "1";
-                    regBtn.style.cursor = "pointer";
                     statusDiv.innerText = "";
                 }
-            } catch (e) {
-                console.error("Token tekshirishda xatolik:", e);
-            }
+            } catch (e) { console.error(e); }
         }, 2000);
 
-        // Sahifa yuklanganda foydalanuvchi avval ro'yxatdan o'tganini tekshirish
         if (localStorage.getItem('hasRegisteredWheel') === 'true') {
             nameInput.disabled = true;
             regBtn.disabled = true;
-            regBtn.style.opacity = "0.5";
-            regBtn.style.cursor = "not-allowed";
             statusDiv.style.color = "#10b981";
             statusDiv.innerText = "Siz allaqachon qo'shilgansiz! 🎉 Katta ekranni kuzating.";
         }
 
         window.registerName = async function() {
             const name = nameInput.value.trim();
-
-            if (name === "") {
-                alert("Iltimos, ismingizni yozing!");
-                return;
-            }
+            if (name === "") { alert("Iltimos, ismingizni yozing!"); return; }
 
             if (localStorage.getItem('hasRegisteredWheel') === 'true') {
                 alert("Siz faqat bir marta ro'yxatdan o'ta olasiz!");
@@ -398,7 +374,6 @@
             statusDiv.innerText = "Yuborilmoqda...";
 
             try {
-                // Hozirgi reset tokenini olish
                 const tokenRes = await fetch(`${DATABASE_URL}resetToken.json`);
                 const currentToken = await tokenRes.json();
 
@@ -409,34 +384,23 @@
                 });
 
                 if (response.ok) {
-                    // Qurilmada muvaffaqiyatli ro'yxatdan o'tganini saqlash
                     localStorage.setItem('hasRegisteredWheel', 'true');
-                    if (currentToken) {
-                        localStorage.setItem('wheel_reset_token', currentToken);
-                    }
+                    if (currentToken) localStorage.setItem('wheel_reset_token', currentToken);
 
                     statusDiv.style.color = "#10b981";
-                    statusDiv.innerText = "Siz muvaffaqiyatli qo'shildingiz! 🎉 Katta ekranga qarang.";
+                    statusDiv.innerText = "Siz muvaffaqiyatli qo'shildingiz! 🎉";
                     nameInput.value = "";
-                    
-                    // Input va tugmani bloklash
                     nameInput.disabled = true;
                     regBtn.disabled = true;
-                    regBtn.style.opacity = "0.5";
-                    regBtn.style.cursor = "not-allowed";
-                } else {
-                    throw new Error();
-                }
+                } else { throw new Error(); }
             } catch (error) {
                 statusDiv.style.color = "#ef4444";
-                statusDiv.innerText = "Xatolik yuz berdi. Qaytadan urinib ko'ring.";
+                statusDiv.innerText = "Xatolik! Qayta urinib ko'ring.";
             }
         };
     }
 
-    // ----------------------------------------------------
-    // ADMIN LOGIKASI (G'ildirak va boshqaruv)
-    // ----------------------------------------------------
+    // ADMIN BOSHQARUVI, CANVAS VA AUDIO EFEKTLAR
     function initAdminLogic() {
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
@@ -453,59 +417,38 @@
         window.audioCtx = null;
         window.currentPlaceToDraw = 3;
 
-        // Real-vaqtda Firebase'dan yuklab olish
         window.fetchParticipants = async function() {
             if (window.isSpinning) return; 
-
             try {
                 const response = await fetch(`${DATABASE_URL}participants.json`);
                 const data = await response.json();
-                
-                if (data && typeof data === 'object') {
-                    window.participants = Object.values(data).map(item => item.name);
-                } else {
-                    window.participants = [];
-                }
-                
+                window.participants = data && typeof data === 'object' ? Object.values(data).map(item => item.name) : [];
                 countDisplay.innerText = `Ishtirokchilar: ${window.participants.length} ta`;
                 drawWheel();
-            } catch (error) {
-                console.error("Xatolik yuz berdi:", error);
-            }
+            } catch (error) { console.error(error); }
         };
 
-        // BAZANI TOZALASH (Yangi o'yin signali)
         window.clearDatabase = async function() {
             if (window.isSpinning) return;
-            if (!confirm("Haqiqatan ham barcha ishtirokchilarni o'chirib tashlamoqchimisiz?")) return;
+            if (!confirm("Barcha ishtirokchilarni o'chirib tashlamoqchimisiz?")) return;
 
             try {
-                // Ismlarni o'chirish
                 await fetch(`${DATABASE_URL}participants.json`, { method: 'DELETE' });
-                
-                // Yangi reset token yaratish (bu foydalanuvchilar ekranini qulfdan ochadi)
                 const newToken = "reset_" + Date.now();
-                await fetch(`${DATABASE_URL}resetToken.json`, {
-                    method: 'PUT',
-                    body: JSON.stringify(newToken)
-                });
+                await fetch(`${DATABASE_URL}resetToken.json`, { method: 'PUT', body: JSON.stringify(newToken) });
 
                 window.participants = [];
                 window.activeParticipants = [];
                 document.getElementById('name-1').innerText = '-';
                 document.getElementById('name-2').innerText = '-';
                 document.getElementById('name-3').innerText = '-';
-                statusBox.innerText = "Ro'yxat tozalandi. Yangi ismlarni kutamiz!";
+                statusBox.innerText = "Ro'yxat tozalandi!";
                 window.fetchParticipants();
-            } catch (error) {
-                alert("Tozalashda xatolik yuz berdi");
-            }
+            } catch (error) { alert("Xatolik yuz berdi"); }
         };
 
         function initAudio() {
-            if (!window.audioCtx) {
-                window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+            if (!window.audioCtx) window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
 
         function playTickSound() {
@@ -514,33 +457,29 @@
             const osc = window.audioCtx.createOscillator();
             const gain = window.audioCtx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(1000, window.audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(100, window.audioCtx.currentTime + 0.06);
+            osc.frequency.setValueAtTime(900, window.audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, window.audioCtx.currentTime + 0.05);
             gain.gain.setValueAtTime(0.1, window.audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, window.audioCtx.currentTime + 0.06);
-            osc.connect(gain);
-            gain.connect(window.audioCtx.destination);
-            osc.start();
-            osc.stop(window.audioCtx.currentTime + 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.01, window.audioCtx.currentTime + 0.05);
+            osc.connect(gain); gain.connect(window.audioCtx.destination);
+            osc.start(); osc.stop(window.audioCtx.currentTime + 0.05);
         }
 
         function playWinSound(place) {
             initAudio();
             if (!window.audioCtx) return;
-            const freqs = place === 1 ? [523.25, 659.25, 783.99, 1046.50] : [392.00, 493.88, 587.33, 783.99];
+            const freqs = place === 1 ? [523, 659, 783, 1046] : [392, 493, 587, 783];
             freqs.forEach((freq, index) => {
                 setTimeout(() => {
                     const osc = window.audioCtx.createOscillator();
                     const gain = window.audioCtx.createGain();
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, window.audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.15, window.audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, window.audioCtx.currentTime + 0.4);
-                    osc.connect(gain);
-                    gain.connect(window.audioCtx.destination);
-                    osc.start();
-                    osc.stop(window.audioCtx.currentTime + 0.4);
-                }, index * 100);
+                    gain.gain.setValueAtTime(0.12, window.audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, window.audioCtx.currentTime + 0.35);
+                    osc.connect(gain); gain.connect(window.audioCtx.destination);
+                    osc.start(); osc.stop(window.audioCtx.currentTime + 0.35);
+                }, index * 90);
             });
         }
 
@@ -552,26 +491,19 @@
 
             if (numSegments === 0) {
                 ctx.fillStyle = '#6b7280';
-                ctx.font = '16px sans-serif';
+                ctx.font = '15px sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText("Ishtirokchilar kutilmoqda...", radius, radius);
+                ctx.fillText("Kutilmoqda...", radius, radius);
                 return;
             }
 
             const arcSize = (2 * Math.PI) / numSegments;
-
             for (let i = 0; i < numSegments; i++) {
                 const angle = i * arcSize;
                 ctx.fillStyle = colors[i % colors.length];
-                ctx.beginPath();
-                ctx.moveTo(radius, radius);
-                ctx.arc(radius, radius, radius - 5, angle, angle + arcSize);
-                ctx.closePath();
-                ctx.fill();
-
-                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                ctx.lineWidth = 2;
-                ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(radius, radius);
+                ctx.arc(radius, radius, radius, angle, angle + arcSize);
+                ctx.closePath(); ctx.fill();
 
                 ctx.save();
                 ctx.translate(radius, radius);
@@ -579,28 +511,21 @@
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 13px sans-serif';
-                
                 let text = list[i];
-                if (text.length > 12) text = text.substring(0, 10) + '...';
-                
-                ctx.fillText(text, radius - 20, 5);
+                if (text.length > 11) text = text.substring(0, 9) + '...';
+                ctx.fillText(text, radius - 15, 4);
                 ctx.restore();
             }
         }
 
         window.startTournament = function() {
             if (window.isSpinning) return;
-
-            if (window.participants.length < 3) {
-                alert("G'ildirakni aylantirish uchun kamida 3 ta ishtirokchi ro'yxatdan o'tishi kerak!");
-                return;
-            }
+            if (window.participants.length < 3) { alert("Kamida 3 ta ishtirokchi kerak!"); return; }
 
             window.activeParticipants = [...window.participants];
             document.getElementById('name-1').innerText = '-';
             document.getElementById('name-2').innerText = '-';
             document.getElementById('name-3').innerText = '-';
-            
             window.currentPlaceToDraw = 3;
             runSingleSpin();
         };
@@ -608,7 +533,6 @@
         function runSingleSpin() {
             window.isSpinning = true;
             spinBtn.disabled = true;
-
             statusBox.innerText = `🌀 ${window.currentPlaceToDraw}-o'rin aniqlanmoqda...`;
 
             const numSegments = window.activeParticipants.length;
@@ -617,14 +541,13 @@
             const targetRotation = window.currentRotation + spinAngle;
             
             const startTime = performance.now();
-            const duration = 4000;
+            const duration = 3500;
             let lastTickAngle = 0;
 
             function animate(timestamp) {
                 const elapsed = timestamp - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 const easeOut = 1 - Math.pow(1 - progress, 3);
-                
                 const currentAngle = window.currentRotation + (spinAngle * easeOut);
                 canvas.style.transform = `rotate(${currentAngle}deg)`;
 
@@ -634,27 +557,17 @@
                     lastTickAngle = segmentProgress;
                 }
 
-                if (progress < 1) {
-                    requestAnimationFrame(animate);
-                } else {
+                if (progress < 1) { requestAnimationFrame(animate); } else {
                     window.currentRotation = targetRotation % 360;
-                    
                     const normalizedAngle = (360 - (window.currentRotation % 360) + 270) % 360;
                     const winnerIndex = Math.floor(normalizedAngle / arcSize) % numSegments;
                     const winner = window.activeParticipants[winnerIndex];
 
                     document.getElementById(`name-${window.currentPlaceToDraw}`).innerText = winner;
-                    document.getElementById(`name-${window.currentPlaceToDraw}`).style.color = 
-                        window.currentPlaceToDraw === 1 ? '#fcd34d' : (window.currentPlaceToDraw === 2 ? '#cbd5e1' : '#f97316');
-
                     playWinSound(window.currentPlaceToDraw);
 
                     if (typeof confetti === 'function') {
-                        confetti({
-                            particleCount: 80,
-                            spread: 60,
-                            origin: { y: 0.6 }
-                        });
+                        confetti({ particleCount: 50, spread: 45, origin: { y: 0.6 } });
                     }
 
                     window.activeParticipants.splice(winnerIndex, 1);
@@ -665,26 +578,13 @@
                             window.currentPlaceToDraw--;
                             runSingleSpin();
                         } else {
-                            statusBox.innerText = "🏆 Musobaqa yakunlandi! Tabriklaymiz! 🏆";
-                            
-                            if (typeof confetti === 'function') {
-                                let end = Date.now() + (2 * 1000);
-                                (function frame() {
-                                    confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
-                                    confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
-                                    if (Date.now() < end) {
-                                        requestAnimationFrame(frame);
-                                    }
-                                }());
-                            }
-
+                            statusBox.innerText = "🏆 Musobaqa yakunlandi! 🏆";
                             window.isSpinning = false;
                             spinBtn.disabled = false;
                         }
-                    }, 2000);
+                    }, 1800);
                 }
             }
-
             requestAnimationFrame(animate);
         }
 
@@ -692,6 +592,5 @@
         window.fetchParticipants();
     }
 </script>
-
 </body>
 </html>
